@@ -1,0 +1,94 @@
+#ifndef _LOG_H_
+#define _LOG_H_
+
+
+#include <stdio.h>
+
+
+#define DBG_LOG_LABEL_ERR "[ERR]"
+#define DBG_LOG_LABEL_WRN "[WRN]"
+#define DBG_LOG_LABEL_INF "[INF]"
+#define DBG_LOG_LABEL_ENT "[ENT]"
+#define DBG_LOG_LABEL_LEV "[LEV]"
+
+#define DBG_LOG_TEXT_ATTRIBUTE_NORMAL       "0"
+#define DBG_LOG_TEXT_ATTRIBUTE_BOLD         "1"
+#define DBG_LOG_TEXT_ATTRIBUTE_UNDERSCORE   "4"
+#define DBG_LOG_TEXT_ATTRIBUTE_BLINK        "5"
+#define DBG_LOG_TEXT_ATTRIBUTE_REVERSE      "7"
+#define DBG_LOG_TEXT_ATTRIBUTE_CONCEAL      "8"
+
+#define DBG_LOG_FOREGROUND_COLOR_BLACK      "30"
+#define DBG_LOG_FOREGROUND_COLOR_RED        "31"
+#define DBG_LOG_FOREGROUND_COLOR_GREEN      "32"
+#define DBG_LOG_FOREGROUND_COLOR_YELLOW     "33"
+#define DBG_LOG_FOREGROUND_COLOR_BLUE       "34"
+#define DBG_LOG_FOREGROUND_COLOR_PURPLE     "35"
+#define DBG_LOG_FOREGROUND_COLOR_LIGHT_BLUE "36"
+#define DBG_LOG_FOREGROUND_COLOR_WHITE      "37"
+
+#define DBG_LOG_BACKGROUND_COLOR_BLACK      "40"
+#define DBG_LOG_BACKGROUND_COLOR_RED        "41"
+#define DBG_LOG_BACKGROUND_COLOR_GREEN      "42"
+#define DBG_LOG_BACKGROUND_COLOR_YELLOW     "43"
+#define DBG_LOG_BACKGROUND_COLOR_BLUE       "44"
+#define DBG_LOG_BACKGROUND_COLOR_PURPLE     "45"
+#define DBG_LOG_BACKGROUND_COLOR_LIGHT_BLUE "46"
+#define DBG_LOG_BACKGROUND_COLOR_WHITE      "47"
+
+#define DBG_LOG_COLOR_ERR DBG_LOG_FOREGROUND_COLOR_RED
+#define DBG_LOG_COLOR_WRN DBG_LOG_FOREGROUND_COLOR_YELLOW
+#define DBG_LOG_COLOR_INF DBG_LOG_FOREGROUND_COLOR_LIGHT_BLUE
+#define DBG_LOG_COLOR_ENT DBG_LOG_TEXT_ATTRIBUTE_BOLD ";" DBG_LOG_FOREGROUND_COLOR_BLACK
+#define DBG_LOG_COLOR_LEV DBG_LOG_TEXT_ATTRIBUTE_BOLD ";" DBG_LOG_FOREGROUND_COLOR_BLACK
+
+#ifdef  ENABLE_DBG_LOG_COLOR
+#	define ANSI_COLOR_ESCAPE_SEQUENCE(color) "\033" "[" color "m"
+#else
+#	define ANSI_COLOR_ESCAPE_SEQUENCE(color) ""
+#endif
+
+#define DBG_LOG(color, label, format, ...) printf(ANSI_COLOR_ESCAPE_SEQUENCE(color) label "[%s(%d)] " format ANSI_COLOR_ESCAPE_SEQUENCE(DBG_LOG_TEXT_ATTRIBUTE_NORMAL) "\n", __FUNCTION__, __LINE__, ## __VA_ARGS__)
+
+#ifndef DBG_LOG_LEVEL
+#	define DBG_LOG_LEVEL 0
+#endif
+
+#define DBG_LOG_ERR_IS_ENABLE DBG_LOG_LEVEL >= 1
+#define DBG_LOG_WRN_IS_ENABLE DBG_LOG_LEVEL >= 2
+#define DBG_LOG_INF_IS_ENABLE DBG_LOG_LEVEL >= 3
+#define DBG_LOG_ENT_IS_ENABLE DBG_LOG_LEVEL >= 4
+#define DBG_LOG_LEV_IS_ENABLE DBG_LOG_LEVEL >= 4
+
+#if DBG_LOG_ERR_IS_ENABLE
+#	define DBG_LOG_ERR(format, ...) DBG_LOG(DBG_LOG_COLOR_ERR, DBG_LOG_LABEL_ERR, format, ## __VA_ARGS__)
+#else
+#	define DBG_LOG_ERR(format, ...)
+#endif
+
+#if DBG_LOG_WRN_IS_ENABLE
+#	define DBG_LOG_WRN(format, ...) DBG_LOG(DBG_LOG_COLOR_WRN, DBG_LOG_LABEL_WRN, format, ## __VA_ARGS__)
+#else
+#	define DBG_LOG_WRN(format, ...)
+#endif
+
+#if DBG_LOG_INF_IS_ENABLE
+#	define DBG_LOG_INF(format, ...) DBG_LOG(DBG_LOG_COLOR_INF, DBG_LOG_LABEL_INF, format, ## __VA_ARGS__)
+#else
+#	define DBG_LOG_INF(format, ...)
+#endif
+
+#if DBG_LOG_ENT_IS_ENABLE
+#	define DBG_LOG_ENT(format, ...) DBG_LOG(DBG_LOG_COLOR_ENT, DBG_LOG_LABEL_ENT, format, ## __VA_ARGS__)
+#else
+#	define DBG_LOG_ENT(format, ...)
+#endif
+
+#if DBG_LOG_LEV_IS_ENABLE
+#	define DBG_LOG_LEV(format, ...) DBG_LOG(DBG_LOG_COLOR_LEV, DBG_LOG_LABEL_LEV, format, ## __VA_ARGS__)
+#else
+#	define DBG_LOG_LEV(format, ...)
+#endif
+
+
+#endif
